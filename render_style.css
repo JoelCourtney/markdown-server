@@ -1,0 +1,137 @@
+@import url(https://overpass-30e2.kxcdn.com/overpass.css);
+@import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.207/distr/fira_code.css);
+@import url("/highlight/styles/nord.css");
+
+#pastebox {
+    width: 725px;
+    margin: auto;
+    background-color: white;
+    padding:3em;
+}
+
+#toc {
+    border: 1px solid #2E3440;
+    border-radius: 5px;
+}
+
+body {
+    font-family: overpass, monospace;
+    background-color:#555555;
+}
+
+code {
+    font-family: Fira Code, monospace;
+  border-radius: 5px;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #2E3440;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #2E3440;
+  /* content: open-quote; */
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+
+.tikzdiv {
+  padding-top: 10px;
+}
+
+h1 {
+  text-align:center;
+  font-variant: small-caps;
+  padding:10px;
+  background-color:#2E3440;
+  border-radius: 5px;
+  color: white;
+}
+
+h2:after {
+  content:' ';
+  display:block;
+  border: 1px dashed black;
+}
+
+h3:right {
+    content: '---';
+}
+
+pre {
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+.script-output {
+    border: 1px solid #2E3440;
+    border-radius: 5px;
+    padding: .5em;
+    margin-bottom: 1px;
+}
+
+.log-output {
+
+    white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+
+  font-family: Fira Code, monospace;
+}
+
+.tikz-output {
+    width: min-content;
+    margin: auto;
+    padding:1em;
+}
+
+.js-plotly-plot {
+    width: 670px;
+    margin:auto;
+}
+
+
+@media print {
+    #pastebox{width:auto;padding:0;}
+    body {background-color:white;}
+    .pagebreak {
+      clear: both;
+      page-break-after: always;
+  }
+  .js-plotly-plot {
+    page-break-inside: avoid;
+  }
+  .tikz-output {
+    page-break-inside: avoid;
+  }
+  .script-output {
+      page-break-inside: avoid;
+  }
+  table, figure {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5 {
+    page-break-after: avoid;
+  }
+  @page {
+    @bottom-right {
+        content: counter(page);
+    }
+  }
+  a:visited {
+      color:blue;
+  }
+}

@@ -19,14 +19,16 @@ var delimiters = [
 ];
 
 var replacements = [
-    [/<tikz>/g, '<div class="tikzdiv"><center><sc'+'ript type="text/tikz">\\begin{tikzpicture}[scale=2]'],
+    [/<tikz>/g, '<div class="tikz-output script-output"><center><sc'+'ript type="text/tikz">\\begin{tikzpicture}[scale=2]'],
     [/<\/tikz>/g, '\\end{tikzpicture}</scr'+'ipt></center></div>'],
     [/\$%/g, "\\begin{align}"],
     [/%\$/g, "\\end{align}"],
     [/<table>/g, '<table class="table table-bordered table-nonfluid">'],
-]
+];
 
-function render(input, clean, from_link) {
+var converter;
+
+function render(input) {
     var text = input;
     var cuts = [];
     var scripts = [];
@@ -40,22 +42,8 @@ function render(input, clean, from_link) {
         }
         var script = text.slice(i, j+'</script>'.length);
         var close_hairpin = script.indexOf('>');
-        var div = script.indexOf(' div');
-        var print = script.indexOf(' print');
-        var pretty = script.indexOf(' pretty');
-        var post_matter = '';
-        if (pretty != -1 && pretty < close_hairpin) {
-            console.log("pretty");
-        }
-        if (print != -1 && print < close_hairpin) {
-            console.log("print");
-        }
-        if (div != -1 && div < close_hairpin) {
-            post_matter += '<div class="scriptdiv" id="autogendiv' + script_count + '" style="width:600px;height:300px;"></div>';
-            script = script.replace("%%%div%%%", "autogendiv" + script_count);
-        }
         scripts.push(script);
-        text = text.slice(0,i) + post_matter + text.slice(j+'</script>'.length);
+        text = text.slice(0,i) + text.slice(j+'</script>'.length);
         script_count++;
         i = text.indexOf('<script');
     }
@@ -74,8 +62,8 @@ function render(input, clean, from_link) {
             text = text.slice(0, i) + "%%%" + cut_counter++ + "%%%" + text.slice(j+pair[1].length);
             i = text.indexOf(pair[0]);
         }
-    }
-    var converter = new showdown.Converter();
+    };
+    converter = new showdown.Converter();
     converter.setOption('tables', true);
     converter.setOption('literalMidWordUnderscores', false);
     converter.setFlavor('github');
@@ -86,29 +74,11 @@ function render(input, clean, from_link) {
     for (var i = 0; i < replacements.length; i++) {
         text = text.replace(replacements[i][0], replacements[i][1]);
     }
-    if (clean) {
-        paste(text, true);
-        document.body.className = "";
-        var stylesheets = document.getElementsByTagName('link'), i, sheet;
-        for (i in stylesheets) {
-            sheet = stylesheets[i];
-            if (sheet.parentNode) {
-                if (sheet.getAttribute('type').toLowerCase() == 'text/css')
-                    sheet.parentNode.removeChild(sheet);
-            }
-        }
-        var link = $("<link />", {
-            rel: "stylesheet",
-            type: "text/css",
-            href: "/assets/css/render_style.css"
-        });
-        $('head').append(link);
-    } else {
-        paste(text, false);
-    }
+    document.getElementById("pastebox").innerHTML = text;
     for (var i = 0; i < scripts.length; i++) {
         $('head').append(scripts[i]);
     }
+    generate_toc();
     window.dispatchEvent(new CustomEvent("renderrequest"));
     MathJax.typesetPromise();
 }
@@ -117,17 +87,33 @@ function prettify_code(text) {
 
 }
 
-function paste(text, body) {
-    if (body) {
-        document.body.innerHTML = text;
-    } else {
-        document.getElementById("pastebox").innerHTML = text;
-    }
-}
-
 var canvas_id_count = 0;
 function spawn_canvas(id) {
     console.log(id);
+}
+
+function generate_toc() {
+    var div = document.getElementById("toc");
+    if (div) {
+        var md = '---\n'
+        var pastebox = document.getElementById("pastebox");
+        for (var i = 0; i < pastebox.childNodes.length; i++) {
+            var node = pastebox.childNodes[i];
+            switch (node.nodeName) {
+                case "H2":
+                    md += "- [" + node.innerHTML + "](#"+node.id+")\n"
+                    break;
+                case "H3":
+                    md += "\t- [" + node.innerHTML + "](#"+node.id+")\n"
+                    break;
+                case "H4":
+                    md += "\t\t- [" + node.innerHTML + "](#"+node.id+")\n"
+                    break;
+            }
+        }
+        html = "<center><h3>Table of Contents</h3></center>" + converter.makeHtml(md);
+        div.innerHTML = html;
+    }
 }
 
 window.addEventListener('renderrequest', (event) => {
