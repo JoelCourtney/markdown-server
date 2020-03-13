@@ -6,13 +6,27 @@ import os
 import pathlib
 import sys
 import MarkdocHttpRequestHandler
+import wx
 
 my_dir = pathlib.Path(__file__).parent.absolute()
 
+def get_path(wildcard):
+    app = wx.App(None)
+    style = wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+    dialog = wx.FileDialog(None, 'Open', wildcard=wildcard, style=style)
+    if dialog.ShowModal() == wx.ID_OK:
+        path = dialog.GetPath()
+    else:
+        path = None
+    dialog.Destroy()
+    return path
+
+md_file = ''
+
 if (len(sys.argv) != 2):
-    print("wrong number of args")
-    sys.exit(1)
-md_file = os.path.abspath(sys.argv[1])
+    md_file = os.path.abspath(get_path('*.mdoc'))
+else:
+    md_file = os.path.abspath(sys.argv[1])
 
 os.chdir(my_dir)
 
