@@ -1,6 +1,6 @@
 @import url(https://overpass-30e2.kxcdn.com/overpass.css);
 @import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.207/distr/fira_code.css);
-@import url("/highlight/styles/nord.css");
+@import url("/highlight/styles/obsidian.css");
 
 #pastebox {
     width: 725px;
@@ -94,13 +94,20 @@ pre {
 
 .tikz-output {
     width: min-content;
+    max-width: 725px;
     margin: auto;
     padding:1em;
 }
 
+plot-output,
+vega-embed,
 .js-plotly-plot {
-    width: 670px;
+    max-width: 725px;
     margin:auto;
+}
+
+img {
+  max-width: 725px;
 }
 
 

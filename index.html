@@ -6,7 +6,7 @@
 
 	<script>
 	var text = "%%%paste%%%";
-	var server_side_logs = %%%server_side_logs%%%;
+	var server_side_output = %%%server_side_output%%%;
 	window.onload = function() {render(text);};
 	</script>
 
@@ -23,10 +23,15 @@
 	<!--<script src="/assets/scripts/scrape.js"></script>-->
 	<script src="https://joelcourtney.net/assets/scripts/math.min.js"></script>
 
+	<script src="https://cdn.jsdelivr.net/npm/vega@5.10.0"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.6.0"></script>
+  	<!-- Import vega-embed -->
+  	<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.4.0"></script>
+
 	<link rel="stylesheet" href="/render_style.css" />
 
 </head>
 <body>
-	<div id="pastebox"></div>
+	<div id="pastebox">Please wait.</div>
 </body>
 </html>

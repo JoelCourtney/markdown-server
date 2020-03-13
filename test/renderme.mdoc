@@ -4,6 +4,29 @@
 
 ## header two
 
+
+
+```[python code]
+import altair as alt
+from vega_datasets import data
+
+cars = data.cars()
+
+chart = alt.Chart(cars).mark_bar().encode(
+    x='Origin',
+    y='count()'
+).properties(
+    width=400,
+    height=150
+)
+
+plot(chart)
+```
+
+
+
+
+
 $$\div\va E = \frac{\rho}{\epsilon_0}$$
 
 hello world
@@ -31,8 +54,8 @@ var data = [trace1, trace2];
 
 Plotly.newPlot('plot', data);
 
-mdout("hello world");
-mdout(5)
+log("hello world");
+log(5)
 ```
 ||plot||
 
@@ -54,3 +77,17 @@ v = c*((z+1)**2-1)/((z+1)**2+1)
 print('velocity: {:0.3}'.format(v.to(u.km/u.s)))
 ```
 
+```[code python]
+for i in range(0,10):
+  if i % 2 == 0:
+    print(i)
+```
+
+asdf
+
+```[code python]
+  else:
+    print(i)
+```
+
+![test image](spiral.png)
