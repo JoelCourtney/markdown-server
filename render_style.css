@@ -51,7 +51,7 @@ h1 {
   text-align:center;
   font-variant: small-caps;
   padding:10px;
-  background-color:#2E3440;
+  background-color:rgb(54, 0, 92);
   border-radius: 5px;
   color: white;
 }
@@ -91,19 +91,15 @@ pre {
 
   font-family: Fira Code, monospace;
 }
-
+.plot-output,
+.vega-embed,
+.js-plotly-plot,
 .tikz-output {
     width: min-content;
     max-width: 725px;
     margin: auto;
-    padding:1em;
-}
-
-plot-output,
-vega-embed,
-.js-plotly-plot {
-    max-width: 725px;
-    margin:auto;
+    padding:1em !important;
+    display:block !important;
 }
 
 img {
@@ -118,14 +114,12 @@ img {
       clear: both;
       page-break-after: always;
   }
-  .js-plotly-plot {
+  .js-plotly-plot,
+  .tikz-output,
+  .script-output,
+  .vega-embed,
+  .plot-output {
     page-break-inside: avoid;
-  }
-  .tikz-output {
-    page-break-inside: avoid;
-  }
-  .script-output {
-      page-break-inside: avoid;
   }
   table, figure {
     page-break-inside: avoid;
@@ -140,5 +134,8 @@ img {
   }
   a:visited {
       color:blue;
+  }
+  .vega-embed summary {
+    display: none;
   }
 }
