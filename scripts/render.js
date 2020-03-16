@@ -81,6 +81,7 @@ function render(input) {
     generate_toc();
     window.dispatchEvent(new CustomEvent("renderrequest"));
     MathJax.typesetPromise();
+    set_title();
 }
 
 function prettify_code(text) {
@@ -121,3 +122,8 @@ window.addEventListener('renderrequest', (event) => {
       hljs.highlightBlock(block);
     });
   });
+
+function set_title() {
+	var title = document.getElementsByTagName("h1")[0].innerHTML;
+	document.title = title;
+}

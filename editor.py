@@ -47,6 +47,8 @@ def process_code(text):
             language = "TeX"
         elif params.find("python") != -1:
             language = "python"
+        elif params.find("css") != -1:
+            language = 'css'
             
         # Prettify code if requested
         if params.find("code") != -1:
@@ -83,6 +85,10 @@ def process_code(text):
                 code = code.replace("plot(", "markdoc_python_plotter('"+id+"',")
                 replace += '<div class="script-output plot-output" id="'+id+'"></div>'
             python_code += code + '\n'
+        
+        elif language == "css":
+            code = text[code_arg_end+2:code_end]
+            replace += '<style>\n' + code + '\n</style>'
         
         # replace text
         text = text[:code_start] + replace + text[code_end+3:]
