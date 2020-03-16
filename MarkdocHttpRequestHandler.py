@@ -248,5 +248,5 @@ class MarkdocRequestHandler(http.server.BaseHTTPRequestHandler):
         '.py': 'text/plain',
         '.c': 'text/plain',
         '.h': 'text/plain',
-        '.mdoc': 'text/markdoc'
+        '.md': 'text/markdoc'
         })

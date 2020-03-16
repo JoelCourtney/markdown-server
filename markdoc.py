@@ -26,7 +26,7 @@ md_file = ''
 md_dir = ''
 
 if (len(sys.argv) != 2):
-    md_file = os.path.abspath(get_path('*.mdoc'))
+    md_file = os.path.abspath(get_path('*.md'))
 else:
     md_file = os.path.abspath(sys.argv[1])
 md_dir = os.path.dirname(md_file)
