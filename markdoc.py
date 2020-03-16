@@ -7,6 +7,7 @@ import pathlib
 import sys
 import MarkdocHttpRequestHandler
 import wx
+import webbrowser
 
 my_dir = pathlib.Path(os.path.realpath(__file__)).parent.absolute()
 print(my_dir)
@@ -44,6 +45,7 @@ Handler = MarkdocHttpRequestHandler.MarkdocRequestHandler
 
 with socketserver.TCPServer(("",PORT),Handler) as httpd:
     print("serving on localhost")
+    webbrowser.open("http://localhost")
     try:
         httpd.serve_forever()
     except:
