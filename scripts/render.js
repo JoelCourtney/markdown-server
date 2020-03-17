@@ -96,7 +96,7 @@ function spawn_canvas(id) {
 function generate_toc() {
     var div = document.getElementById("toc");
     if (div) {
-        var md = '---\n'
+        var md = ''
         var pastebox = document.getElementById("pastebox");
         for (var i = 0; i < pastebox.childNodes.length; i++) {
             var node = pastebox.childNodes[i];
