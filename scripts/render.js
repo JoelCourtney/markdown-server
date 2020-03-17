@@ -99,6 +99,12 @@ function render(input) {
     window.dispatchEvent(new CustomEvent("renderrequest"));
     MathJax.typesetPromise();
     set_title();
+    $(document).keydown(function(e) {
+        if (e.key == "Escape") {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    })
 }
 
 function prettify_code(text) {
@@ -115,18 +121,24 @@ function generate_toc() {
     if (div) {
         var md = ''
         var pastebox = document.getElementById("pastebox");
-        for (var i = 0; i < pastebox.childNodes.length; i++) {
-            var node = pastebox.childNodes[i];
-            switch (node.nodeName) {
+        var sections = $("h2,h3,h4,toc")
+        for (var i = 0; i < sections.length; i++) {
+            var node = sections[i];
+            switch (node.tagName) {
                 case "H2":
-                    md += "- [" + node.innerHTML + "](#"+node.id+")\n"
+                    md += "- [" + node.innerHTML + "](#"+node.id+")\n";
                     break;
                 case "H3":
-                    md += "\t- [" + node.innerHTML + "](#"+node.id+")\n"
+                    md += "\t- [" + node.innerHTML + "](#"+node.id+")\n";
                     break;
                 case "H4":
-                    md += "\t\t- [" + node.innerHTML + "](#"+node.id+")\n"
+                    md += "\t\t- [" + node.innerHTML + "](#"+node.id+")\n";
                     break;
+                case "TOC": {
+                    md += "\t".repeat(node.attributes.level.value);
+                    md += "- [" + node.attributes.name.value + "](#"+node.id+")\n";
+                    break;
+                }
             }
         }
         html = "<center><h3>Table of Contents</h3></center>" + converter.makeHtml(md);
@@ -144,3 +156,4 @@ function set_title() {
 	var title = document.getElementsByTagName("h1")[0].innerHTML;
 	document.title = title;
 }
+
