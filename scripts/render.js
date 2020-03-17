@@ -1,3 +1,19 @@
+var IdCounter = function () {
+    this.counter = 0;
+}
+
+IdCounter.prototype = new String();
+
+IdCounter.prototype.toString = function() {
+    this.counter++;
+    return this.counter+'-';
+};
+
+IdCounter.prototype.valueOf = function() {
+    this.counter++;
+    return this.counter+'-';
+}
+
 window.MathJax = {
     loader: {load: ['[tex]/physics', '[tex]/newcommand']},
     tex: {
@@ -67,6 +83,7 @@ function render(input) {
     converter.setOption('tables', true);
     converter.setOption('literalMidWordUnderscores', false);
     converter.setFlavor('github');
+    converter.setOption('prefixHeaderId', new IdCounter());
     text = converter.makeHtml(text);
     for (var i = 0; i < cuts.length; i++) {
         text = text.replace("%%%" + i + "%%%", function() {return cuts[i];});
