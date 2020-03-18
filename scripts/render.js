@@ -86,7 +86,7 @@ function render(input) {
     converter.setOption('prefixHeaderId', new IdCounter());
     text = converter.makeHtml(text);
     for (var i = 0; i < cuts.length; i++) {
-        text = text.replace("%%%" + i + "%%%", function() {return cuts[i];});
+        text = text.replace(new RegExp("%%%" + i + "%%%","g"), function() {return cuts[i];});
     }
     for (var i = 0; i < replacements.length; i++) {
         text = text.replace(replacements[i][0], replacements[i][1]);
