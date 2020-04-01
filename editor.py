@@ -97,7 +97,7 @@ def process_code(text):
         code_start = text.find(start)
 
     # Run the python code
-    exec(python_code, {}, {
+    exec(python_code, {
         'markdoc_python_logger': markdoc_python_logger,
         'markdoc_python_plotter': markdoc_python_plotter
     })
