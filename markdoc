@@ -34,8 +34,6 @@ md_dir = os.path.dirname(md_file)
 
 os.chdir(my_dir)
 
-PORT = 8080
-
 MarkdocHttpRequestHandler.md_file = md_file
 MarkdocHttpRequestHandler.md_dir = md_dir
 
@@ -43,12 +41,18 @@ socketserver.TCPServer.allow_reuse_address = True
 
 Handler = MarkdocHttpRequestHandler.MarkdocRequestHandler
 
-with socketserver.TCPServer(("",PORT),Handler) as httpd:
-    print("serving on localhost")
-    webbrowser.open("http://localhost:8080")
+PORT = 8080
+
+while True:
     try:
-        httpd.serve_forever()
-    except:
-        print("Closing the server.")
-        httpd.server_close()
-        raise
+        with socketserver.TCPServer(("",PORT),Handler) as httpd:
+            print("serving on localhost:%i" % PORT)
+            webbrowser.open("http://localhost:%d" % PORT)
+            try:
+                httpd.serve_forever()
+            except:
+                print("Closing the server.")
+                httpd.server_close()
+                raise
+    except OSError as e:
+        PORT += 1
