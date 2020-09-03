@@ -1,5 +1,5 @@
-import html
 import json
+import os
 
 logs = []
 def markdoc_python_logger(id, text):
@@ -28,6 +28,9 @@ def process_code(text):
     output_counter = 0
 
     python_code = ''
+    hadron_code = 'fn markdoc_hadron_print_logger(id,s) {println(id+" print%%%:"+s)}\n'
+    hadron_code += 'fn markdoc_hadron_println_logger(id,s) {println(id+" println%%%:"+s)}\n'
+    empty_hadron = hadron_code
 
     start = '```['
     arg_end = ']\n'
@@ -49,10 +52,15 @@ def process_code(text):
             language = "python"
         elif params.find("css") != -1:
             language = 'css'
+        elif params.find("hadron") != -1:
+            language = 'hadron'
             
         # Prettify code if requested
         if params.find("code") != -1:
-            replace += '```'+language+'\n' + text[code_arg_end+2:code_end] + '```'
+            l = language
+            if l == "hadron":
+                l = "kotlin"
+            replace += '```'+l+'\n' + text[code_arg_end+2:code_end] + '```'
         
         # Prepare javascript to run, provide output space
         if language == 'javascript':
@@ -90,6 +98,22 @@ def process_code(text):
             code = text[code_arg_end+2:code_end]
             replace += '<style>\n' + code + '\n</style>'
         
+        elif language == "hadron":
+            code = text[code_arg_end+2:code_end]
+            id = 'script-output-' + str(output_counter)
+            increment_to = output_counter + 1
+            replace_with = replace + '<div class="script-output log-output" id="'+id+'"></div>'
+            if code.find("print(") != -1:
+                output_counter = increment_to
+                code = code.replace("print(", 'markdoc_hadron_print_logger("'+id+'",')
+                replace = replace_with
+            if code.find("println(") != -1:
+                output_counter = increment_to
+                code = code.replace("println(", 'markdoc_hadron_println_logger("'+id+'",')
+                replace = replace_with
+            hadron_code += code + '\n'
+
+        
         # replace text
         text = text[:code_start] + replace + text[code_end+3:]
 
@@ -97,10 +121,14 @@ def process_code(text):
         code_start = text.find(start)
 
     # Run the python code
-    exec(python_code, {
-        'markdoc_python_logger': markdoc_python_logger,
-        'markdoc_python_plotter': markdoc_python_plotter
-    })
+    if python_code != '':
+        exec(python_code, {
+            'markdoc_python_logger': markdoc_python_logger,
+            'markdoc_python_plotter': markdoc_python_plotter
+        })
+
+    if hadron_code != empty_hadron:
+        execute_hadron(hadron_code)
 
     return text
 
@@ -114,3 +142,28 @@ def process_divs(text):
     return text
 
 pipeline = [process_code, process_divs]
+
+def execute_hadron(code):
+    with open(".markdoc_hadron.hn", "w") as f:
+        f.write(code)
+    out = os.popen("hadron .markdoc_hadron.hn").read()
+    id = ''
+    type = ''
+    for line in out.splitlines():
+        colon = line.find("%%%:")
+        if colon != -1:
+            info = line[0:colon]
+            content = line[colon+4:]
+            space = info.find(' ')
+            if space != -1:
+                id = info[0:space]
+                type = "hadron_" + info[space+1:]
+            else:
+                print("COLON DELIMITER BUT NO SPACE FOUND")
+                exit(10)
+        else:
+            print("HADRON CANT HANDLE THIS SO I CANT EITHER")
+            exit(10)
+        dic = {'type':type, 'id':id, 'text':content}
+        logs.append(dic)
+    os.system("rm .markdoc_hadron.hn")
