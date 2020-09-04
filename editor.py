@@ -38,7 +38,7 @@ def process_code(text):
     code_start = text.find(start)
     while code_start != -1:
         replace = ''
-        code_arg_end = text.find(arg_end)
+        code_arg_end = text.find(arg_end, code_start+3)
         code_end = text.find(end, code_start+3)
         params = text[code_start+4:code_arg_end]
 
